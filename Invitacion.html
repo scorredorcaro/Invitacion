@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestro Gran Día - Invitación de Boda</title>
+
+    <!-- Favicon para la pestaña del navegador (Anillos de boda dorados) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='40' cy='50' r='22' fill='none' stroke='%23c69c3a' stroke-width='6'/><circle cx='60' cy='50' r='22' fill='none' stroke='%23e5c775' stroke-width='6'/><path d='M32 32 L36 28 L40 32' stroke='%23c69c3a' stroke-width='3' fill='none'/></svg>">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts: Great Vibes (Cursive), Cinzel (Classic Serif), Playfair Display, Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --navy-blue: #0e2443;
+            --navy-blue-light: #1c3b66;
+            --gold: #c69c3a;
+            --gold-light: #e5c775;
+            --gold-dark: #997420;
+            --parchment: #fbf8f1;
+            --parchment-border: #f0e6d2;
+        }
+
+        body {
+            background-color: #121820;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--navy-blue);
+        }
+
+        .font-script {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+
+        .font-serif-custom {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .text-navy {
+            color: var(--navy-blue);
+        }
+
+        .text-gold {
+            color: var(--gold);
+        }
+
+        .bg-parchment {
+            background-color: var(--parchment);
+            background-image: radial-gradient(#e2d5c3 0.75px, transparent 0.75px), radial-gradient(#e2d5c3 0.75px, #fbf8f1 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        /* Gold Ornamental Border Styling */
+        .gold-border-frame {
+            position: relative;
+            border: 2px solid var(--gold);
+            outline: 1px solid var(--gold-light);
+            outline-offset: -6px;
+        }
+
+        /* Corner Filigree SVG positioning */
+        .corner-ornament {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .corner-tl { top: -2px; left: -2px; }
+        .corner-tr { top: -2px; right: -2px; transform: scaleX(-1); }
+        .corner-bl { bottom: -2px; left: -2px; transform: scaleY(-1); }
+        .corner-br { bottom: -2px; right: -2px; transform: scale(-1); }
+
+        /* Custom Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Countdown Card Styling */
+        .countdown-box {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(198, 156, 58, 0.4);
+            box-shadow: 0 4px 15px rgba(14, 36, 67, 0.05);
+        }
+
+        /* Music Floating Pulse */
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(198, 156, 58, 0.6); }
+            50% { box-shadow: 0 0 0 12px rgba(198, 156, 58, 0); }
+        }
+
+        .pulse-gold {
+            animation: pulse-gold 2s infinite;
+        }
+
+        /* Audio Visualizer Waves */
+        .sound-wave span {
+            display: inline-block;
+            width: 3px;
+            background-color: var(--gold);
+            animation: wave 1.2s infinite ease-in-out;
+            margin: 0 1px;
+        }
+        .sound-wave span:nth-child(1) { height: 6px; animation-delay: 0.1s; }
+        .sound-wave span:nth-child(2) { height: 16px; animation-delay: 0.2s; }
+        .sound-wave span:nth-child(3) { height: 10px; animation-delay: 0.3s; }
+        .sound-wave span:nth-child(4) { height: 14px; animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(0.4); }
+            50% { transform: scaleY(1); }
+        }
+
+        .sound-wave.paused span {
+            animation: none;
+            height: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen py-6 px-3 sm:px-6 md:py-12 flex flex-col items-center justify-center">
+
+    <!-- Floating Audio Control Toggle -->
+    <div class="fixed top-4 right-4 z-50">
+        <button id="audio-toggle-btn" onclick="toggleAudio()" class="pulse-gold bg-white border-2 border-[#c69c3a] text-[#0e2443] px-4 py-2.5 rounded-full shadow-lg flex items-center gap-2 text-xs sm:text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95">
+            <i id="audio-icon" class="fa-solid fa-music text-[#c69c3a] text-base"></i>
+            <span id="audio-status-text">Me Enamoro - Grupo Galé</span>
+            <div id="sound-wave" class="sound-wave paused flex items-center ml-1">
+                <span></span><span></span><span></span><span></span>
+            </div>
+        </button>
+    </div>
+
+    <!-- Background Audio Element (Coloca la ruta de tu canción en mp3) -->
+    <audio id="wedding-audio" loop preload="auto">
+        <source src="me-enamoro-gale.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Main Container Card -->
+    <main class="w-full max-w-3xl bg-parchment rounded-xl shadow-2xl p-4 sm:p-8 md:p-12 relative overflow-hidden transition-all duration-500 my-auto">
+        
+        <!-- Golden Frame Border Layer -->
+        <div class="gold-border-frame rounded-lg p-4 sm:p-8 md:p-10 relative">
+
+            <!-- SVG Corner Filigree Ornaments -->
+            <svg class="corner-ornament corner-tl" viewBox="0 0 100 100" fill="none">
+                <path d="M5,5 Q 50,5 50,20 Q 50,50 20,50 Q 5,50 5,5 Z" stroke="#c69c3a" stroke-width="2" fill="none"/>
+                <path d="M2,2 L 95,2 M2,2 L 2,95" stroke="#c69c3a" stroke-width="2.5"/>
+                <circle cx="25" cy="25" r="4" fill="#c69c3a"/>
+                <path d="M12,30 Q 30,12 45,30 Q 30,45 12,30" stroke="#997420" stroke-width="1.5" fill="none"/>
+            </svg>
+            <svg class="corner-ornament corner-tr" viewBox="0 0 100 100" fill="none">
+                <path d="M5,5 Q 50,5 50,20 Q 50,50 20,50 Q 5,50 5,5 Z" stroke="#c69c3a" stroke-width="2" fill="none"/>
+                <path d="M2,2 L 95,2 M2,2 L 2,95" stroke="#c69c3a" stroke-width="2.5"/>
+                <circle cx="25" cy="25" r="4" fill="#c69c3a"/>
+                <path d="M12,30 Q 30,12 45,30 Q 30,45 12,30" stroke="#997420" stroke-width="1.5" fill="none"/>
+            </svg>
+            <svg class="corner-ornament corner-bl" viewBox="0 0 100 100" fill="none">
+                <path d="M5,5 Q 50,5 50,20 Q 50,50 20,50 Q 5,50 5,5 Z" stroke="#c69c3a" stroke-width="2" fill="none"/>
+                <path d="M2,2 L 95,2 M2,2 L 2,95" stroke="#c69c3a" stroke-width="2.5"/>
+                <circle cx="25" cy="25" r="4" fill="#c69c3a"/>
+                <path d="M12,30 Q 30,12 45,30 Q 30,45 12,30" stroke="#997420" stroke-width="1.5" fill="none"/>
+            </svg>
+            <svg class="corner-ornament corner-br" viewBox="0 0 100 100" fill="none">
+                <path d="M5,5 Q 50,5 50,20 Q 50,50 20,50 Q 5,50 5,5 Z" stroke="#c69c3a" stroke-width="2" fill="none"/>
+                <path d="M2,2 L 95,2 M2,2 L 2,95" stroke="#c69c3a" stroke-width="2.5"/>
+                <circle cx="25" cy="25" r="4" fill="#c69c3a"/>
+                <path d="M12,30 Q 30,12 45,30 Q 30,45 12,30" stroke="#997420" stroke-width="1.5" fill="none"/>
+            </svg>
+
+            <!-- Header Heart Crown Emblem -->
+            <div class="text-center mb-1 flex flex-col items-center">
+                <svg class="w-16 h-10 text-[#c69c3a]" viewBox="0 0 100 50" fill="none" stroke="currentColor">
+                    <path d="M 50 12 C 45 2, 35 2, 30 12 C 25 22, 40 32, 50 42 C 60 32, 75 22, 70 12 C 65 2, 55 2, 50 12 Z" fill="none" stroke-width="2"/>
+                    <path d="M 50 2 L 50 8 M 50 42 L 50 48" stroke-width="1.5"/>
+                    <path d="M 20 25 C 30 20, 35 25, 42 22 M 80 25 C 70 20, 65 25, 58 22" stroke-width="1.5"/>
+                </svg>
+            </div>
+
+            <!-- Main Title Banner -->
+            <div class="text-center my-2 sm:my-4">
+                <h1 class="font-script text-5xl sm:text-6xl md:text-7xl text-navy font-normal tracking-wide drop-shadow-sm select-none">
+                    Nuestro gran día
+                </h1>
+                
+                <!-- Elegant Separator Heart Line -->
+                <div class="flex items-center justify-center gap-3 my-2 opacity-80">
+                    <div class="h-[1px] w-12 sm:w-20 bg-gradient-to-r from-transparent to-[#c69c3a]"></div>
+                    <i class="fa-solid fa-heart text-[#c69c3a] text-xs"></i>
+                    <div class="h-[1px] w-12 sm:w-20 bg-gradient-to-l from-transparent to-[#c69c3a]"></div>
+                </div>
+            </div>
+
+            <!-- LIVE COUNTDOWN TIMER SECTION -->
+            <section class="my-6 py-4 px-2 rounded-xl bg-white/60 border border-[#c69c3a]/30 shadow-inner text-center">
+                <p class="font-cinzel text-xs sm:text-sm tracking-widest text-[#997420] font-semibold uppercase mb-3">
+                    <i class="fa-regular fa-clock mr-1"></i> Faltan para la celebración
+                </p>
+                <div id="countdown" class="grid grid-cols-4 gap-2 sm:gap-4 max-w-md mx-auto">
+                    <div class="countdown-box p-2 sm:p-3 rounded-lg flex flex-col items-center">
+                        <span id="days" class="font-cinzel text-xl sm:text-3xl font-bold text-navy">00</span>
+                        <span class="text-[10px] sm:text-xs text-[#997420] uppercase font-medium mt-1">Días</span>
+                    </div>
+                    <div class="countdown-box p-2 sm:p-3 rounded-lg flex flex-col items-center">
+                        <span id="hours" class="font-cinzel text-xl sm:text-3xl font-bold text-navy">00</span>
+                        <span class="text-[10px] sm:text-xs text-[#997420] uppercase font-medium mt-1">Horas</span>
+                    </div>
+                    <div class="countdown-box p-2 sm:p-3 rounded-lg flex flex-col items-center">
+                        <span id="minutes" class="font-cinzel text-xl sm:text-3xl font-bold text-navy">00</span>
+                        <span class="text-[10px] sm:text-xs text-[#997420] uppercase font-medium mt-1">Minutos</span>
+                    </div>
+                    <div class="countdown-box p-2 sm:p-3 rounded-lg flex flex-col items-center">
+                        <span id="seconds" class="font-cinzel text-xl sm:text-3xl font-bold text-navy">00</span>
+                        <span class="text-[10px] sm:text-xs text-[#997420] uppercase font-medium mt-1">Segundos</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EVENT DETAILS SECTION (Ceremonia & Recepción) -->
+            <div class="space-y-8 my-8">
+
+                <!-- 1. CEREMONIA SECTION -->
+                <div class="text-center group transition-all duration-300 hover:transform hover:-translate-y-0.5">
+                    <h2 class="font-script text-4xl sm:text-5xl text-navy my-1">
+                        Ceremonia:
+                    </h2>
+                    
+                    <div class="text-[#c69c3a] text-xs mb-3">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+
+                    <div class="flex justify-center mb-3">
+                        <div class="p-3 rounded-full bg-white/70 border border-[#c69c3a]/40 shadow-sm">
+                            <svg class="w-12 h-12 text-[#c69c3a]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M32 6v10M27 10h10" stroke-linecap="round"/>
+                                <path d="M32 16L14 30h36L32 16z"/>
+                                <path d="M18 30v24h28V30"/>
+                                <circle cx="32" cy="24" r="3"/>
+                                <path d="M27 54v-10a5 5 0 0 1 10 0v10"/>
+                                <path d="M10 50c4 0 6-4 6-4s-2 6-6 6M54 50c-4 0-6-4-6-4s2 6 6 6" stroke-width="1.5"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="font-serif-custom text-navy space-y-1">
+                        <p class="text-lg sm:text-2xl font-semibold tracking-wide">
+                            1 de Noviembre, 3:30 p.m.
+                        </p>
+                        <p class="text-sm sm:text-base font-normal text-slate-700 max-w-lg mx-auto px-2">
+                            Cra. 15 Este, Dg. 60 Sur #69,<br class="hidden sm:inline"> Bogotá, Cundinamarca
+                        </p>
+                        <p class="text-sm sm:text-base font-medium text-navy italic">
+                            (Capilla San Camilo de Lelis)
+                        </p>
+                    </div>
+
+                    <div class="mt-4 flex flex-wrap justify-center gap-3">
+                        <a href="https://maps.google.com/?q=Capilla+San+Camilo+de+Lelis+Bogota" target="_blank" rel="noopener noreferrer" 
+                           class="inline-flex items-center gap-2 bg-[#0e2443] hover:bg-[#1c3b66] text-white px-4 py-2 rounded-full text-xs sm:text-sm font-medium shadow-md transition-all hover:shadow-lg">
+                            <i class="fa-solid fa-location-dot text-[#c69c3a]"></i> Abrir en Google Maps
+                        </a>
+                        <a href="https://waze.com/ul?q=Capilla%20San%20Camilo%20de%20Lelis%20Bogota" target="_blank" rel="noopener noreferrer" 
+                           class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-[#0e2443] border border-[#c69c3a] px-4 py-2 rounded-full text-xs sm:text-sm font-medium shadow-sm transition-all">
+                            <i class="fa-brands fa-waze text-sky-500"></i> Abrir en Waze
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Gold Line Divider -->
+                <div class="flex items-center justify-center gap-2 my-6">
+                    <div class="h-[1px] w-24 sm:w-36 bg-[#c69c3a]/50"></div>
+                    <div class="text-[#c69c3a] text-sm">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="h-[1px] w-24 sm:w-36 bg-[#c69c3a]/50"></div>
+                </div>
+
+                <!-- 2. RECEPCIÓN SECTION -->
+                <div class="text-center group transition-all duration-300 hover:transform hover:-translate-y-0.5">
+                    <h2 class="font-script text-4xl sm:text-5xl text-navy my-1">
+                        Recepción:
+                    </h2>
+
+                    <div class="text-[#c69c3a] text-xs mb-3">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+
+                    <div class="flex justify-center mb-3">
+                        <div class="p-3 rounded-full bg-white/70 border border-[#c69c3a]/40 shadow-sm">
+                            <svg class="w-12 h-12 text-[#c69c3a]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M32 12 c-2-3-6-3-8 0 c-2 3 0 6 8 11 c8-5 10-8 8-11 c-2-3-6-3-8 0 Z" fill="#c69c3a" stroke="none"/>
+                                <path d="M20 18l-4 18a6 6 0 0 0 12 0l-1-18z"/>
+                                <path d="M22 36v14M16 50h12"/>
+                                <path d="M44 18l4 18a6 6 0 0 1-12 0l1-18z"/>
+                                <path d="M42 36v14M36 50h12"/>
+                                <path d="M12 22l-3-2M52 22l3-2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="font-serif-custom text-navy space-y-1">
+                        <p class="text-lg sm:text-2xl font-semibold tracking-wide">
+                            1 de Noviembre
+                        </p>
+                        <p class="text-base sm:text-lg font-medium text-slate-800">
+                            Comedor San Camilo de Lelis
+                        </p>
+                        <p class="text-sm sm:text-base font-normal text-slate-600 italic">
+                            (después de la ceremonia)
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- EMBEDDED MAP SECTION -->
+            <section class="mt-8 pt-6 border-t border-[#c69c3a]/30">
+                <div class="text-center mb-4">
+                    <h3 class="font-cinzel text-base sm:text-lg text-navy font-bold tracking-wider uppercase">
+                        Ubicación del Evento
+                    </h3>
+                    <p class="text-xs text-slate-600">Encuentra fácilmente cómo llegar al lugar</p>
+                </div>
+
+                <div class="w-full h-64 sm:h-72 rounded-lg overflow-hidden border-2 border-[#c69c3a]/50 shadow-md">
+                    <iframe 
+                        title="Ubicación Capilla San Camilo de Lelis"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3977.103233842345!2d-74.1205!3d4.5750!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f98e7275d2df5%3A0x1d585ca429b67484!2sCra.%2015%20Este%2C%20Bogot%C3%A1!5e0!3m2!1ses!2sco!4v1700000000000!5m2!1ses!2sco" 
+                        class="w-full h-full border-0" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </section>
+
+            <!-- Bottom Footnote -->
+            <footer class="mt-8 text-center text-xs text-slate-500 font-serif-custom italic">
+                <p>Esperamos contar con tu valiosa presencia para celebrar nuestro amor.</p>
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- Custom Notification Popup Toast -->
+    <div id="toast-msg" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-[#0e2443] text-white text-xs sm:text-sm px-4 py-3 rounded-full shadow-2xl border border-[#c69c3a] transition-all duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toast-text">Notificación</span>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        const weddingDate = new Date("November 1, 2026 15:30:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = `
+                    <div class="col-span-4 py-2 font-script text-3xl text-[#997420]">
+                        ¡Llegó Nuestro Gran Día!
+                    </div>`;
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = String(days).padStart(2, '0');
+            document.getElementById("hours").innerText = String(hours).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        const audio = document.getElementById("wedding-audio");
+        const audioBtn = document.getElementById("audio-toggle-btn");
+        const audioStatusText = document.getElementById("audio-status-text");
+        const soundWave = document.getElementById("sound-wave");
+        let isPlaying = false;
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioStatusText.innerText = "Música pausada";
+                soundWave.classList.add("paused");
+                isPlaying = false;
+            } else {
+                audio.play().then(() => {
+                    audioStatusText.innerText = "Reproduciendo";
+                    soundWave.classList.remove("paused");
+                    isPlaying = true;
+                }).catch(err => {
+                    showToast("Presiona reproducir nuevamente para escuchar la música");
+                });
+            }
+        }
+
+        document.addEventListener('click', function autoPlayOnce() {
+            if (!isPlaying) {
+                audio.play().then(() => {
+                    audioStatusText.innerText = "Reproduciendo";
+                    soundWave.classList.remove("paused");
+                    isPlaying = true;
+                }).catch(() => {});
+            }
+            document.removeEventListener('click', autoPlayOnce);
+        }, { once: true });
+
+        function showToast(text) {
+            const toast = document.getElementById("toast-msg");
+            const toastText = document.getElementById("toast-text");
+            toastText.innerText = text;
+            toast.classList.remove("opacity-0", "pointer-events-none");
+            toast.classList.add("opacity-100");
+
+            setTimeout(() => {
+                toast.classList.remove("opacity-100");
+                toast.classList.add("opacity-0", "pointer-events-none");
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
